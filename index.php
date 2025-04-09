@@ -1,3 +1,13 @@
+<?php
+
+  require_once("src/functions.php");
+  $db = dbConnect();
+    
+  // neighborhood and roomtypes for dropdown
+  $neighborhoods = getNeighborhoods($db);
+  $roomTypes = getRoomTypes($db);
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -25,6 +35,7 @@
             </div>
             </div>
         </div>
+<!-- above no edits -->
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container">
             <a href="index.php" class="navbar-brand d-flex align-items-center">
@@ -37,14 +48,56 @@
             </div>
         </div>
     </header>
-
+<!-- above no edits -->
     <main>
 
     <div class="album py-5 bg-light">
         <div class="container">
-        <h1>a title:</h1>
+        <h1>Search for rentals in the Portland area:</h1>
+        <!-- submit get data to results.php -->
+          <form action="results.php" method="GET">
 
-            <div class="row g-3 align-items-center">
+            <!-- neighborhood select-->
+            <div class="mb-3">
+                <label for="neighborhood" class="form-label">Neighborhood:</label>
+                <select name="neighborhood" id="neighborhood" class="form-select">
+                    
+                    <!-- keep optional value so it defaults to any neighborhood   -->
+                    <option value="">Neighborhood: </option>
+
+                    <!-- iterate through every neighborhood and add it to the dropdown -->
+                    <?php foreach ($neighborhoods as $n): ?>
+                    <option value="<?php echo $n['id']; ?>"><?php echo htmlspecialchars($n['neighborhood']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+              <!-- room select  same as above-->
+            <div class="mb-3">
+                <label for="roomType" class="form-label">Room Type:</label>
+                <select name="roomType" id="roomType" class="form-select">
+                <option value=""> Room Type: </option>
+                <?php foreach ($roomTypes as $rt): ?>
+                    <option value="<?php echo htmlspecialchars($rt['roomType']); ?>"><?php echo htmlspecialchars($rt['roomType']); ?></option>
+                <?php endforeach; ?>
+                </select>
+            </div>
+
+              <!-- Number of guests selector, don't need data, same as above -->
+            <div class="mb-3">
+                <label for="guests" class="form-label">Number of Guests:</label>
+                <select name="guests" id="guests" class="form-select">
+                <?php foreach (range(1,10) as $num): ?>
+                    <option value="<?php echo $num; ?>"><?php echo $num; ?></option>
+                <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Search</button>
+            </form> 
+
+            <!-- sample drop down eblow -->
+            <!-- <div class="row g-3 align-items-center">
                 <div class="col-auto">
                     <label for="neighborhood" class="col-form-label">sample form element label</label>
                 </div>
@@ -53,9 +106,7 @@
                         form element here
                 </div>
 
-            </div><!-- row -->
-
-
+            </div>row -->
         </div><!-- .container-->
     </div><!-- album-->
 
